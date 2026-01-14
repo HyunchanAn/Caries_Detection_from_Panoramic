@@ -1,0 +1,52 @@
+# Caries Detection Project Development Log
+
+##### (1일차) 2026-01-14 #####
+
+## 1. 프로젝트 개요
+치과용 파노라마 엑스레이 이미지에서 충치(Caries), 매복치(Impacted), 치근단 병소(Periapical Lesion) 등을 자동으로 탐지하는 AI 시스템 개발 프로젝트.
+
+## 2. 지금까지 진행된 내용 (Current Progress)
+
+### A. 데이터 처리 및 학습
+- 데이터셋 확보: DENTEX (MICCAI 2023 Challenge) 데이터셋 활용.
+- 데이터 변환: DENTEX 특유의 COCO format(category_id_3 필드)을 YOLO 형식으로 변환하는 전용 스크립트(src/data_converter.py) 작성 및 실행.
+- 모델 학습: YOLOv11s 모델을 사용하여 4개의 클래스(Impacted, Caries, Periapical Lesion, Deep Caries) 학습 완료.
+- 학습 결과: 우수한 mAP 점수를 기록하며 best.pt 가중치 생성 완료.
+
+### B. 서비스 개발 (Streamlit App)
+- UI 구현: 사용자가 이미지를 업로드하면 즉시 분석 결과(Bounding Box & Confidence Score)를 보여주는 앱 인터페이스 구축.
+- 시각화 최적화:
+    - 가독성 개선: 확률 수치에 클래스별 배경색 하이라이트 추가.
+    - 조건부 폰트: 배경 밝기에 따라 폰트 색상(검정/흰색) 자동 조정.
+    - 이미지 범례: 공유 편의성을 위해 이미지 내부에 직접 한글 범례(맑은 고딕 사용) 삽입.
+    - 커스터마이징: 사이드바를 통해 선 굵기, 글자 크기, 탐지 임계값 실시간 조절 기능 추가.
+
+---
+
+## 3. 발견된 한계점
+- 혼합치열기(Mixed Dentition) 탐지 미흡: 현재 DENTEX 데이터셋이 성인/청소년(12세 이상) 위주로 구성되어 있어, 유치와 영구치가 섞인 어린이의 정상적인 발육 상태(치아 싹 등)를 매복치나 병소로 오탐지하는 경향이 있음.
+
+---
+
+## 4. 향후 계획 및 데이터셋 확보 계획 (Future Roadmap)
+
+### A. 성능 개선 목표
+- 소아/청소년 파노라마 탐지 정확도 향상.
+- 유치와 영구치를 구분할 수 있는 클래스 세분화.
+
+### B. 활용 예정 오픈 데이터셋
+1. Children's Dental Panoramic Radiographs Dataset (Figshare/Kaggle)
+   - 연령: 2세 ~ 13세 (유치, 혼합치열기 위주)
+   - 특징: 세계 최초의 소아 전용 고해상도 데이터셋.
+   - https://www.kaggle.com/datasets/truthisneverlinear/childrens-dental-panoramic-radiographs-dataset?resource=download-directory
+2. Kaggle - Children's Dental Panoramic X-ray Dataset
+   - 데이터 규모: 약 849장.
+   - 특징: 14가지 세부 치과 질환(DT, CR 등) 라벨링 포함.
+   - https://www.kaggle.com/datasets/wanmugui/childrens-dental-panoramic-x-ray-dataset
+   
+
+### C. 기술적 로드맵
+- Fine-tuning: 확보한 소아 전용 데이터를 기존 모델에 추가 학습시켜 혼합치열기 대응.
+- 데이터 증강(Augmentation): 더 다양한 각도와 화질의 파노라마 이미지에 대응하도록 데이터 보강.
+
+---
