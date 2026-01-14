@@ -1,0 +1,12 @@
+# Train/Val data paths
+path: ../data/processed  # dataset root dir
+train: images/train  # train images (relative to 'path') 
+val: images/val  # val images (relative to 'path')
+test:  # optional
+
+# Classes
+names:
+  0: Caries
+  1: Filling
+  2: Impacted
+  3: Crown
