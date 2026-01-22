@@ -67,12 +67,12 @@ if uploaded_file is not None:
                 font_size_score = int(font_size * (res_image.width / 1000) * 0.8)
 
                 # Try to load a Korean font
+                import glob
                 try:
-                    # Font paths to check (Windows, Linux/Streamlit Cloud, Local)
+                    # 1. Check specific common paths first for speed
                     font_paths = [
                         "C:/Windows/Fonts/malgun.ttf", # Windows
                         "/usr/share/fonts/truetype/nanum/NanumGothic.ttf", # Linux (Streamlit Cloud)
-                        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", # Linux default
                         "arial.ttf" # Fallback local
                     ]
                     
@@ -82,6 +82,23 @@ if uploaded_file is not None:
                             font_path = path
                             break
                     
+                    # 2. If not found, search aggressively for any Korean-friendly font in the system
+                    if not font_path:
+                        # Search in Linux font directories
+                        search_patterns = [
+                            "/usr/share/fonts/**/*.ttf",
+                            "/usr/share/fonts/**/*.otf",
+                            "/home/adminuser/.fonts/**/*.ttf"
+                        ]
+                        for pattern in search_patterns:
+                            potential_fonts = glob.glob(pattern, recursive=True)
+                            for f in potential_fonts:
+                                f_lower = f.lower()
+                                if "nanum" in f_lower or "gothic" in f_lower or "malgun" in f_lower:
+                                    font_path = f
+                                    break
+                            if font_path: break
+
                     if font_path:
                         font_legend = ImageFont.truetype(font_path, font_size_legend)
                         font_score = ImageFont.truetype(font_path, font_size_score)
