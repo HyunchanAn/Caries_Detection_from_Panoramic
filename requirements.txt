@@ -1,8 +1,8 @@
+opencv-python-headless
 ultralytics
 streamlit
 pillow
 pandas
 numpy
-opencv-python-headless
 huggingface_hub
 kagglehub
