@@ -16,9 +16,9 @@ st.markdown("""
 st.sidebar.header("Model Settings")
 model_source = st.sidebar.radio("모델 선택", ["기본 모델 (yolo11s.pt)", "사용자 학습 모델"])
 
-model_path = "runs/detect/dentex_yolov11s/weights/best.pt" # Default to newly trained model
+model_path = "models/best.pt" # Default to newly trained model
 if model_source == "사용자 학습 모델":
-    custom_model_path = st.sidebar.text_input("모델 경로 (.pt 파일)", "runs/detect/dentex_yolov11s/weights/best.pt")
+    custom_model_path = st.sidebar.text_input("모델 경로 (.pt 파일)", "models/best.pt")
     if os.path.exists(custom_model_path):
         model_path = custom_model_path
     else:
@@ -118,7 +118,16 @@ if uploaded_file is not None:
                 spacing = 22 * scale # Reduced spacing
                 
                 # Draw HIGHER transparency background (alpha=80 instead of 128)
-                bg_w, bg_h = 240 * scale, len(legend_items) * spacing + 10 * scale
+                # Calculate dynamic width based on text length
+                max_text_width = 0
+                for item in legend_items:
+                    text_bbox = draw.textbbox((0, 0), item["name"], font=font_legend)
+                    text_w = text_bbox[2] - text_bbox[0]
+                    max_text_width = max(max_text_width, text_w)
+                
+                # Width = text_offset (20*scale) + max_text_width + padding (15*scale)
+                bg_w = (20 * scale) + max_text_width + (15 * scale)
+                bg_h = len(legend_items) * spacing + 10 * scale
                 draw.rectangle([start_x - 8, start_y - 12, start_x + bg_w, start_y + bg_h - 10], fill=(0, 0, 0, 80))
                 
                 for i, item in enumerate(legend_items):

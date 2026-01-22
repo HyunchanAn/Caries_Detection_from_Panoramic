@@ -29,6 +29,7 @@ venv/
 runs/
 .streamlit/
 *.pt
+!models/*.pt
 !yolo11s.pt
 
 # Data
