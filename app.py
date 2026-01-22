@@ -68,12 +68,26 @@ if uploaded_file is not None:
 
                 # Try to load a Korean font
                 try:
-                    font_path = "C:/Windows/Fonts/malgun.ttf"
-                    if not os.path.exists(font_path):
-                        font_path = "arial.ttf"
+                    # Font paths to check (Windows, Linux/Streamlit Cloud, Local)
+                    font_paths = [
+                        "C:/Windows/Fonts/malgun.ttf", # Windows
+                        "/usr/share/fonts/truetype/nanum/NanumGothic.ttf", # Linux (Streamlit Cloud)
+                        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", # Linux default
+                        "arial.ttf" # Fallback local
+                    ]
                     
-                    font_legend = ImageFont.truetype(font_path, font_size_legend)
-                    font_score = ImageFont.truetype(font_path, font_size_score)
+                    font_path = None
+                    for path in font_paths:
+                        if os.path.exists(path):
+                            font_path = path
+                            break
+                    
+                    if font_path:
+                        font_legend = ImageFont.truetype(font_path, font_size_legend)
+                        font_score = ImageFont.truetype(font_path, font_size_score)
+                    else:
+                        font_legend = ImageFont.load_default()
+                        font_score = ImageFont.load_default()
                 except:
                     font_legend = ImageFont.load_default()
                     font_score = ImageFont.load_default()
