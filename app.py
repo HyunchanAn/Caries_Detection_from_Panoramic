@@ -62,22 +62,19 @@ if uploaded_file is not None:
                 res_image = Image.fromarray(res_plotted[..., ::-1])
                 draw = ImageDraw.Draw(res_image, "RGBA") # Allow alpha
                 
+                # Calculate font sizes first to ensure they are always available
+                font_size_legend = int(14 * (res_image.width / 1000))
+                font_size_score = int(font_size * (res_image.width / 1000) * 0.8)
+
                 # Try to load a Korean font
                 try:
                     font_path = "C:/Windows/Fonts/malgun.ttf"
                     if not os.path.exists(font_path):
                         font_path = "arial.ttf"
                     
-                    # Font for legend
-                    font_size_legend = int(14 * (res_image.width / 1000))
                     font_legend = ImageFont.truetype(font_path, font_size_legend)
-                    
-                    # Font for confidence scores on teeth (Using Regular)
-                    font_size_score = int(font_size * (res_image.width / 1000) * 0.8)
                     font_score = ImageFont.truetype(font_path, font_size_score)
                 except:
-                    font_size_legend = int(14 * (res_image.width / 1000))
-                    font_size_score = int(font_size * (res_image.width / 1000) * 0.8)
                     font_legend = ImageFont.load_default()
                     font_score = ImageFont.load_default()
 
