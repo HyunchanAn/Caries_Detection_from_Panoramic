@@ -58,24 +58,24 @@
 - 다운로드 스크립트 작성: `src/download_data.py`를 kagglehub 기반으로 수정하여 `/data` 디렉터리에 저장하도록 자동화.
 
 ## 6. 소아 데이터 병합 및 학습 (Pediatric Data Integration)
-- **라벨 분석 및 매핑**: 
+- 라벨 분석 및 매핑: 
     - 새로 확보한 데이터셋이 중국어 라벨(龋病, 深窝沟 등)로 되어 있음을 확인.
     - 기존 모델과의 호환성을 위해 모든 한자 라벨을 영문 YOLO 클래스로 변환하는 매핑 작업 수행.
     - `치수염(Pulpitis)`은 `Deep Caries`로 통합하여 학습 효율성 증대.
-    - **중요**: 최종 결과물(라벨 파일 및 앱 출력)에 한자가 포함되지 않도록 철저히 변환 처리함.
-- **데이터 변환 스크립트**: `src/convert_pediatric.py` 작성 및 실행. (JSON -> YOLO txt 변환 및 Train 폴더 병합)
-- **추가 학습 (Fine-tuning)**:
+    - 중요: 최종 결과물(라벨 파일 및 앱 출력)에 한자가 포함되지 않도록 철저히 변환 처리함.
+- 데이터 변환 스크립트: `src/convert_pediatric.py` 작성 및 실행. (JSON -> YOLO txt 변환 및 Train 폴더 병합)
+- 추가 학습 (Fine-tuning):
     - 모델: `yolo11s` 기반
     - 데이터: 성인(DENTEX) + 소아(Pediatric) 데이터셋 병합본
     - 결과: `runs/detect/dentex_yolov11s2`에 저장됨.
 
 ## 7. 클라우드 배포 및 트러블슈팅 (Deployment & Troubleshooting)
-- **Streamlit Cloud 배포 최적화**:
+- Streamlit Cloud 배포 최적화:
     - 리눅스 환경 대응을 위해 `packages.txt` 작성 (libGL, libglib 등 시스템 라이브러리 추가).
-    - 안정성을 위해 `runtime.txt`를 통해 **Python 3.11** 버전 고정.
+    - 안정성을 위해 `runtime.txt`를 통해 Python 3.11 버전 고정.
     - `requirements.txt`에 `opencv-python-headless`를 명시하여 GUI 없는 서버 환경 최적화.
-- **UI/UX 버그 수정**:
-    - **Font Path Error 수정**: 리눅스 환경에서 윈도우 폰트(Malgun) 부재로 인한 `NameError` 해결 (변수 선언 위치 조정 및 Default 폰트 처리).
-    - **한글 깨짐 현상 해결**: 서버에 `fonts-nanum` 패키지를 설치하도록 설정하고, `app.py`에서 `glob`을 이용해 시스템 내 폰트 경로를 자동으로 탐색하도록 로직 고도화.
-    - **동적 가로 길이 조정**: 범례 박스의 크기가 이미지 해상도와 텍스트 길이에 따라 자동으로 맞춰지도록 개선.
-- **최종 상태**: GitHub 저장소(`feature/pediatric-data-integration`)를 통해 클라우드 배포 완료 및 정상 작동 확인.
+- UI/UX 버그 수정:
+    - Font Path Error 수정: 리눅스 환경에서 윈도우 폰트(Malgun) 부재로 인한 `NameError` 해결 (변수 선언 위치 조정 및 Default 폰트 처리).
+    - 한글 깨짐 현상 해결: 서버에 `fonts-nanum` 패키지를 설치하도록 설정하고, `app.py`에서 `glob`을 이용해 시스템 내 폰트 경로를 자동으로 탐색하도록 로직 고도화.
+    - 동적 가로 길이 조정: 범례 박스의 크기가 이미지 해상도와 텍스트 길이에 따라 자동으로 맞춰지도록 개선.
+- 최종 상태: GitHub 저장소(`feature/pediatric-data-integration`)를 통해 클라우드 배포 완료 및 정상 작동 확인.
